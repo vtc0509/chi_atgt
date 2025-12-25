@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trò chơi An toàn Giao thông</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="header">
+        <h1>🚦 Hành trình An toàn Giao thông 🚦</h1>
+        <div class="score-board">
+          <div class="score-item">⭐ Điểm: <span id="score">0</span></div>
+          <div class="score-item">
+            🚧 Chướng ngại vật: <span id="obstacleCount">0</span>/5
+          </div>
+          <div class="score-item">❤️ Mạng: <span id="lives">3</span></div>
+        </div>
+      </div>
+
+      <div class="game-world" id="gameWorld">
+        <div class="start-screen" id="startScreen">
+          <h2>🎮 Chào mừng đến với Hành trình An toàn!</h2>
+          <p>
+            Bạn sẽ điều khiển một học sinh tham gia giao thông trên đường
+            phố.<br />
+            Gặp chướng ngại vật, trả lời câu hỏi đúng để vượt qua và nhận phần
+            thưởng blind box!<br />
+            Mỗi câu sai sẽ bị trừ điểm và mất mạng. Cố gắng vượt qua 5 chướng
+            ngại vật!
+          </p>
+
+          <div class="instructions">
+            <h3>📜 Hướng dẫn:</h3>
+            <ul>
+              <li>Chướng ngại vật sẽ tự di chuyển tới gần bạn</li>
+              <li>Trả lời đúng: +10 điểm, nhận blind box và tiếp tục</li>
+              <li>Trả lời sai: -10 điểm, mất 1 mạng</li>
+              <li>Hết 3 mạng = Thua cuộc</li>
+            </ul>
+          </div>
+          <button class="btn-start" onclick="openCharacterSelect()">
+            🚀 Bắt đầu hành trình 🚀
+          </button>
+        </div>
+
+        <!-- Mây -->
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+
+        <!-- Cây và công trình -->
+        <img src="images/tree1.png" alt="Cây 1" class="background-obj tree1" />
+        <img src="images/house.png" alt="Nhà" class="background-obj tree2" />
+        <img src="images/tree2.png" alt="Cây 2" class="background-obj tree3" />
+        <img
+          src="images/school.png"
+          alt="Trường học"
+          class="background-obj tree4"
+        />
+        <img src="images/tree1.png" alt="Cây 3" class="background-obj tree5" />
+        <img src="images/house.png" alt="Nhà 2" class="background-obj tree6" />
+        <img src="images/tree2.png" alt="Cây 4" class="background-obj tree7" />
+        <img
+          src="images/school.png"
+          alt="Trường học 2"
+          class="background-obj tree8"
+        />
+        <img src="images/tree1.png" alt="Cây 5" class="background-obj tree9" />
+        <img src="images/tree2.png" alt="Cây 6" class="background-obj tree10" />
+        <img src="images/tree1.png" alt="Cây 7" class="background-obj tree11" />
+
+        <!-- Vỉa hè -->
+        <div class="sidewalk"></div>
+
+        <!-- Đường -->
+        <div class="road">
+          <div class="road-line"></div>
+        </div>
+
+        <!-- Nhân vật (dùng hình ảnh) -->
+        <div class="character" id="character">
+          <img
+            id="characterSprite"
+            src="images/nhan_vat_1.png"
+            alt="Nhân vật học sinh tham gia giao thông"
+            class="character-img"
+          />
+        </div>
+
+        <!-- Người đi bộ trang trí -->
+        <div class="pedestrian ped1 large">
+          <img src="images/phu2.png" alt="Người đi bộ 1" />
+        </div>
+        <div class="pedestrian ped2 large">
+          <img src="images/phu2.png" alt="Người đi bộ 2" />
+        </div>
+        <div class="pedestrian ped3">
+          <img src="images/phu3.png" alt="Người đi bộ 3" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal chọn nhân vật -->
+    <div class="modal-overlay" id="characterSelectModal">
+      <div class="modal-content">
+        <h2>Chọn nhân vật của bạn</h2>
+        <div class="character-select">
+          <div class="character-select-list">
+            <div class="character-option" data-sprite="images/nhan_vat_1.png">
+              <img src="images/nhan_vat_1.png" alt="Nhân vật 1" />
+            </div>
+            <div class="character-option" data-sprite="images/nhan_vat_2.png">
+              <img src="images/nhan_vat_2.png" alt="Nhân vật 2" />
+            </div>
+            <div class="character-option" data-sprite="images/nhan_vat_3.png">
+              <img src="images/nhan_vat_3.png" alt="Nhân vật 3" />
+            </div>
+          </div>
+          <button class="btn-start" onclick="confirmCharacterSelection()">
+            Bắt đầu với nhân vật này
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal chọn chủ đề -->
+    <div class="modal-overlay" id="topicModal">
+      <div class="modal-content">
+        <h2>🎯 Chọn Chủ đề Câu hỏi</h2>
+        <div class="topic-boxes" id="topicBoxes"></div>
+      </div>
+    </div>
+
+    <!-- Modal câu hỏi -->
+    <div class="modal-overlay" id="questionModal">
+      <div class="question-modal">
+        <div class="question-header">
+          <h3 id="topicTitle"></h3>
+        </div>
+        <div class="question-text" id="questionText"></div>
+        <div class="answers" id="answersContainer"></div>
+      </div>
+    </div>
+
+    <!-- Modal phần thưởng / blind box -->
+    <div class="modal-overlay" id="rewardModal">
+      <div class="reward-modal">
+        <h2>🎁 Phần thưởng Blind Box</h2>
+        <p class="reward-intro">
+          Bạn đã vượt qua chướng ngại vật! Hãy chọn một blind box để nhận phần
+          thưởng ngẫu nhiên cho hành trình tiếp theo.
+        </p>
+        <div class="blind-boxes" id="blindBoxes"></div>
+        <div class="reward-result" id="rewardResult"></div>
+        <button
+          class="btn-start btn-reward-continue"
+          onclick="continueAfterReward()"
+        >
+          Tiếp tục hành trình
+        </button>
+      </div>
+    </div>
+
+    <!-- Penalty display -->
+    <div class="penalty-display" id="penaltyDisplay"></div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
